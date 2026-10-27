@@ -59,6 +59,7 @@ vim.g.mail42 = "marvin@42.fr"
 
 F2 edits the buffer; save with `<C-s>` when ready. Formatting on save also uses
 the 42 formatter for C, so it preserves the style. C++ keeps `clang-format`.
+Plain `.h` files default to C; use `.hpp` or `:setlocal filetype=cpp` for a C++ header.
 `:Header42` updates only the header, and `:Norm42` runs only the check.
 Rules such as function length and variable limits still need code changes;
 the formatter does not guarantee that arbitrary code will pass every rule.
