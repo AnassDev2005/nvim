@@ -64,6 +64,11 @@ git clone --depth 1 --branch main \
   https://github.com/AnassDev2005/nvim.git "$workdir/nvim"
 [[ -f $workdir/nvim/init.lua && -f $workdir/nvim/lua/config/lazy.lua ]] ||
   die 'The downloaded repository is missing the Neovim config.'
+[[ -f $workdir/nvim/scripts/setup-42-tools.sh ]] ||
+  die 'The downloaded repository is missing the 42 tools installer.'
+command -v python3 >/dev/null 2>&1 || die 'Install Python 3.10+ with venv support first.'
+python3 -c 'import sys; sys.exit(sys.version_info < (3, 10))' ||
+  die 'Python 3.10+ is required for the 42 formatter and Norminette.'
 
 stamp=$(date -u +%Y%m%dT%H%M%SZ).$$
 for path in "$config_dir" "$data_root/nvim" "$state_root/nvim" "$cache_root/nvim"; do
@@ -82,4 +87,7 @@ mv -- "$workdir/nvim" "$config_dir"
 installed=true
 
 printf '\nInstalled in %s\n' "$config_dir"
+if ! bash "$config_dir/scripts/setup-42-tools.sh"; then
+  die "Config installed, but 42 tools setup failed. Retry: bash $config_dir/scripts/setup-42-tools.sh"
+fi
 printf 'Open nvim and let plugins and editor tools finish installing.\n'

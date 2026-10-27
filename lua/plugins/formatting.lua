@@ -29,10 +29,18 @@ return {
     "stevearc/conform.nvim",
     opts = {
       formatters_by_ft = {
-        c = { "clang_format" },
+        c = { "c_formatter_42" },
         cpp = { "clang_format" },
         python = { "ruff_organize_imports", "ruff_format" },
         cmake = { "cmake_format" },
+      },
+      formatters = {
+        c_formatter_42 = {
+          command = function()
+            return require("config.fortytwo").tool("c_formatter_42") or "c_formatter_42"
+          end,
+          stdin = true,
+        },
       },
     },
   },

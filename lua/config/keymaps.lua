@@ -2,3 +2,4 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 -- Language actions are buffer-local plugin mappings. Keep LazyVim defaults.
+require("config.fortytwo").setup()

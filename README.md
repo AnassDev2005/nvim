@@ -1,7 +1,8 @@
 # Anass's Neovim config
 
 My [LazyVim](https://www.lazyvim.org/) setup for C, C++, CMake, and Python,
-with a dark Gruvbox theme, completion, formatting, debugging, and Python tests.
+with a dark Gruvbox theme, completion, formatting, debugging, Python tests,
+and an F2 workflow for the 42 C Norm and header.
 
 ## Install with one command
 
@@ -30,12 +31,45 @@ or require `sudo`.
 - Git **2.19 or newer**, Bash, and `curl`.
 - A C compiler and Make for Treesitter parsers and Telescope's native extension.
 - `ripgrep` and `fd` for searching files; `fzf` for the Python environment picker.
-- Python 3 with `pip` for the Python tools, and CMake for CMake projects.
+- Python **3.10+** with `pip` and `venv` for the 42/Python tools, and CMake for CMake projects.
 - `unzip` and `tar` for tool downloads. A Nerd Font is recommended for icons.
 
 Install these with your operating system's package manager first. Your projects
 still need their own compiler/build dependencies or Python environment. Install
 `pytest` in the project environment to run Python tests.
+
+### 42 C formatting and header (F2)
+
+Press **F2** in Normal or Insert mode in a named `.c` or `.h` buffer to:
+
+1. Format the complete buffer with [c-formatter-42](https://github.com/dawnbeen/c_formatter_42).
+2. Insert/update the standard 42 header using the current filename.
+3. Check the unsaved buffer with [Norminette](https://github.com/42School/norminette).
+   Remaining errors appear as diagnostics and in the quickfix list.
+
+The header defaults to `anes-sal <marvin@42.fr>`. Existing authors and creation
+dates are preserved; the update line refreshes on F2 and when saving a file
+that already has a 42 header. To change your identity, put these in
+`lua/config/options.lua`, or set the `USER42` and `MAIL42` environment variables:
+
+```lua
+vim.g.user42 = "anes-sal"
+vim.g.mail42 = "marvin@42.fr"
+```
+
+F2 edits the buffer; save with `<C-s>` when ready. Formatting on save also uses
+the 42 formatter for C, so it preserves the style. C++ keeps `clang-format`.
+`:Header42` updates only the header, and `:Norm42` runs only the check.
+Rules such as function length and variable limits still need code changes;
+the formatter does not guarantee that arbitrary code will pass every rule.
+
+The one-command installer also installs `c-formatter-42` 0.2.8 and Norminette
+3.3.60 in a private Python environment under Neovim's data directory
+(`~/.local/share/nvim/42-tools` by default). For an existing checkout, run:
+
+```sh
+bash "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/scripts/setup-42-tools.sh"
+```
 
 ## Keybindings
 
@@ -73,6 +107,7 @@ Plugin panels also expose their own help as listed below.
 
 | Keys | Action / availability |
 | --- | --- |
+| `<F2>` | Format C, add/update the 42 header, and check Norminette (Normal or Insert mode, `.c`/`.h`) |
 | `<leader>cb` | Save all files and build with `:make` (C, clangd attached) |
 | `<leader>cx` | Choose and run an executable (C, clangd attached); save and run the current file (Python, Pyright attached) |
 | `<leader>cB` | Save all files, build with `:make`, then choose an executable if the build succeeds (C, clangd attached) |
@@ -687,8 +722,9 @@ Open with `<leader>cm` or `:Mason`.
 
 Open Neovim from your project root. C build flags belong in the project's
 Makefile or CMake presets. Supply `compile_commands.json` or `compile_flags.txt`
-for clangd; it also runs clang-tidy checks. Project `.clang-format` and
-`pyproject.toml` files control formatting and lint policy.
+for clangd; it also runs clang-tidy checks. C uses the 42 formatter. Project
+`.clang-format` files control C++ formatting, while Python's `pyproject.toml`
+controls its formatting and lint policy.
 
 Python uses Pyright for types, Ruff for linting/formatting/imports, and debugpy
 for debugging. The runner uses the selected environment, then `VIRTUAL_ENV`,
@@ -711,6 +747,8 @@ the lockfile. Commit or save your own config changes before pulling updates.
 | `lua/config/options.lua` | Editor options |
 | `lua/config/autocmds.lua` | Language indentation and C include pairing |
 | `lua/config/workflow.lua` | Build/run helpers and Python environment selection |
+| `lua/config/fortytwo.lua` | F2 formatting, 42 header, and Norm diagnostics |
+| `scripts/setup-42-tools.sh` | Install the pinned 42 formatter/checker in a private Python environment |
 | `lua/plugins/` | Language, theme, completion, formatting, and pairing settings |
 | `lazy-lock.json` | Recorded plugin versions |
 
