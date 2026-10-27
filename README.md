@@ -12,9 +12,18 @@ On Linux or macOS, with the requirements below already installed, run:
 curl -fsSL https://raw.githubusercontent.com/AnassDev2005/nvim/main/install.sh | bash
 ```
 
-Then open `nvim`. The first launch downloads the plugins and starts installing
-the configured editor tools. Let those installations finish before using the
-language features. Use `:Mason` and `:checkhealth` to inspect their status.
+To remove this configuration, close Neovim and run:
+
+```sh
+rm -rf -- "${XDG_CONFIG_HOME:-$HOME/.config}/nvim"
+```
+
+This deletes the configuration checkout and any local edits inside it.
+
+After installation, open `nvim`. The first launch downloads the plugins and
+starts installing the configured editor tools. Let those installations finish
+before using the language features. Use `:Mason` and `:checkhealth` to inspect
+their status.
 
 The installer clones the config into `~/.config/nvim` and respects the standard
 `XDG_CONFIG_HOME`, `XDG_DATA_HOME`, `XDG_STATE_HOME`, and `XDG_CACHE_HOME`
